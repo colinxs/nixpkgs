@@ -189,6 +189,16 @@ addAutoPatchelfSearchPath() {
             \( -name '*.so' -o -name '*.so.*' \) -print0)
 }
 
+# TODO need to first check that the DYNAMIC section exists before
+# extracting the size.
+hasEmptyDynamic() {
+    file="$1"
+    hex='0[xX][0-9a-fA-F]\{16\}'
+    line1='DYNAMIC[ \t0-9A-z]*'
+    dynsize="$(readelf -l "$file" | grep "$line1" -A1 | grep -v "$line1" | grep -o "$hex" | head -n 1)"
+    [ "$dynsize" = "0x0000000000000000" ]
+}
+
 autoPatchelf() {
     local norecurse=
 
@@ -217,6 +227,7 @@ autoPatchelf() {
 
     while IFS= read -r -d $'\0' file; do
       isELF "$file" || continue
+      hasEmptyDynamic "$file" && continue
       segmentHeaders="$(LANG=C $READELF -l "$file")"
       # Skip if the ELF file doesn't have segment headers (eg. object files).
       # not using grep -q, because it can cause Broken pipe
