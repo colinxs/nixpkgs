@@ -73,10 +73,10 @@ stdenv.mkDerivation ({
       ./nix-locale-archive.patch
 
       /* Don't use /etc/ld.so.cache, for non-NixOS systems.  */
-      ./dont-use-system-ld-so-cache.patch
+      # ./dont-use-system-ld-so-cache.patch
 
       /* Don't use /etc/ld.so.preload, but /etc/ld-nix.so.preload.  */
-      ./dont-use-system-ld-so-preload.patch
+      # ./dont-use-system-ld-so-preload.patch
 
       /* The command "getconf CS_PATH" returns the default search path
          "/bin:/usr/bin", which is inappropriate on NixOS machines. This
