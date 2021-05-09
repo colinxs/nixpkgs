@@ -193,7 +193,7 @@ addAutoPatchelfSearchPath() {
 # extracting the size.
 hasEmptyDynamic() {
     file="$1"
-    hex='0[xX][0-9a-fA-F]\{16\}'
+    hex='0[xX][0-9a-fA-F]{16}'
     line1='DYNAMIC[ \t0-9A-z]*'
     dynsize="$(readelf -l "$file" | grep "$line1" -A1 | grep -v "$line1" | grep -o "$hex" | head -n 1)"
     [ "$dynsize" = "0x0000000000000000" ]
