@@ -1,0 +1,21 @@
+name: SyncFork
+
+on:
+  schedule:
+    - cron: '*/15 * * * *' # every 30 minutes
+  workflow_dispatch: # on button click
+
+jobs:
+  SyncFork:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: tgymnich/fork-sync@v1.3
+        with:
+          owner: nix-community 
+          base: master
+          head: master
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          personal_token: ${{ secrets.PAT }}
+          merge_method: rebase
+          auto_approve: true
+
