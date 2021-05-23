@@ -100,6 +100,19 @@
       Now nginx uses the zlib-ng library by default.
     </para>
    </listitem>
+   <listitem>
+    <para>
+     <link xlink:href="https://libreswan.org/">Libreswan</link> has been updated
+     to version 4.4. The package now includes example configurations and manual
+     pages by default. The NixOS module has been changed to use the upstream
+     systemd units and write the configuration in the <literal>/etc/ipsec.d/
+     </literal> directory. In addition, two new options have been added to
+     specify connection policies
+     (<xref linkend="opt-services.libreswan.policies"/>)
+     and disable send/receive redirects
+     (<xref linkend="opt-services.libreswan.disableRedirects"/>).
+    </para>
+   </listitem>
   </itemizedlist>
  </section>
 
@@ -145,6 +158,11 @@
        section of the NixOS manual</link> for more information.
      </para>
    </listitem>
+   <listitem>
+     <para>
+       <xref linkend="opt-services.nebula.networks" /> <link xlink:href="https://github.com/slackhq/nebula">Nebula VPN</link>
+     </para>
+   </listitem>
   </itemizedlist>
 
  </section>
@@ -176,6 +194,12 @@
     <para>
      The <option>security.hideProcessInformation</option> module has been removed.
      It was broken since the switch to cgroups-v2.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+      The <literal>linuxPackages.ati_drivers_x11</literal> kernel modules have been removed.
+     The drivers only supported kernels prior to 4.2, and thus have become obsolete.
     </para>
    </listitem>
     <listitem>
@@ -1081,6 +1105,11 @@ environment.systemPackages = [
     <para>
      The newly enabled <literal>systemd-pstore.service</literal> now automatically evacuates crashdumps and panic logs from the persistent storage to <literal>/var/lib/systemd/pstore</literal>.
      This prevents NVRAM from filling up, which ensures the latest diagnostic data is always stored and alleviates problems with writing new boot configurations.
+    </para>
+   </listitem>
+   <listitem>
+    <para>
+     Nixpkgs now contains <link xlink:href="https://github.com/NixOS/nixpkgs/pull/118232">automatically packaged GNOME Shell extensions</link> from the <link xlink:href="https://extensions.gnome.org/">GNOME Extensions</link> portal. You can find them, filed by their UUID, under <literal>gnome38Extensions</literal> attribute for GNOME 3.38 and under <literal>gnome40Extensions</literal> for GNOME 40. Finally, the <literal>gnomeExtensions</literal> attribute contains extensions for the latest GNOME Shell version in Nixpkgs, listed under a more human-friendly name. The unqualified attribute scope also contains manually packaged extensions. Note that the automatically packaged extensions are provided for convenience and are not checked or guaranteed to work.
     </para>
    </listitem>
   </itemizedlist>
