@@ -112,6 +112,8 @@ in {
   inherit buildSetupcfg;
 
   inherit (callPackage ../development/interpreters/python/hooks { })
+    condaInstallHook
+    condaUnpackHook
     eggUnpackHook
     eggBuildHook
     eggInstallHook
@@ -333,6 +335,8 @@ in {
 
   aioshelly = callPackage ../development/python-modules/aioshelly { };
 
+  aiosignal = callPackage ../development/python-modules/aiosignal { };
+
   aiosmb = callPackage ../development/python-modules/aiosmb { };
 
   aiosmtpd = callPackage ../development/python-modules/aiosmtpd { };
@@ -416,6 +420,8 @@ in {
   ansible-base = callPackage ../development/python-modules/ansible/base.nix { };
 
   ansible-collections = callPackage ../development/python-modules/ansible/collections.nix { };
+
+  ansible-core = callPackage ../development/python-modules/ansible/core.nix { };
 
   ansible-kernel = callPackage ../development/python-modules/ansible-kernel { };
 
@@ -1391,6 +1397,8 @@ in {
 
   clf = callPackage ../development/python-modules/clf { };
 
+  cock = callPackage ../development/python-modules/cock { };
+
   click = callPackage ../development/python-modules/click { };
 
   clickclick = callPackage ../development/python-modules/clickclick { };
@@ -1518,6 +1526,8 @@ in {
   colour = callPackage ../development/python-modules/colour { };
 
   commandparse = callPackage ../development/python-modules/commandparse { };
+
+  commentjson = callPackage ../development/python-modules/commentjson { };
 
   commoncode = callPackage ../development/python-modules/commoncode { };
 
@@ -2618,6 +2628,8 @@ in {
   fritzconnection = callPackage ../development/python-modules/fritzconnection { };
 
   frozendict = callPackage ../development/python-modules/frozendict { };
+
+  frozenlist = callPackage ../development/python-modules/frozenlist { };
 
   fs = callPackage ../development/python-modules/fs { };
 
@@ -6190,6 +6202,8 @@ in {
 
   pyro-ppl = callPackage ../development/python-modules/pyro-ppl { };
 
+  pyroon = callPackage ../development/python-modules/pyroon { };
+
   pyroute2 = callPackage ../development/python-modules/pyroute2 { };
 
   pyrr = callPackage ../development/python-modules/pyrr { };
@@ -7007,6 +7021,10 @@ in {
 
   qasm2image = throw "qasm2image is no longer maintained (since November 2018), and is not compatible with the latest pythonPackages.qiskit versions."; # added 2020-12-09
 
+  qcelemental = callPackage ../development/python-modules/qcelemental { };
+
+  qcengine = callPackage ../development/python-modules/qcengine { };
+
   qdarkstyle = callPackage ../development/python-modules/qdarkstyle { };
 
   qdldl = callPackage ../development/python-modules/qdldl { };
@@ -7204,6 +7222,8 @@ in {
 
   resampy = callPackage ../development/python-modules/resampy { };
 
+  resolvelib = callPackage ../development/python-modules/resolvelib { };
+
   responses = callPackage ../development/python-modules/responses { };
 
   respx = callPackage ../development/python-modules/respx { };
@@ -7398,11 +7418,6 @@ in {
   samsungtvws = callPackage ../development/python-modules/samsungtvws { };
 
   sanic = callPackage ../development/python-modules/sanic {
-    # pytest-sanic is doing ok for the sole purpose of testing Sanic.
-    pytest-sanic = self.pytest-sanic.overridePythonAttrs (oldAttrs: {
-      doCheck = false;
-      meta.broken = false;
-    });
     # Don't pass any `sanic` to avoid dependency loops.  `sanic-testing`
     # has special logic to disable tests when this is the case.
     sanic-testing = self.sanic-testing.override { sanic = null; };
@@ -8055,6 +8070,8 @@ in {
   };
 
   sympy = callPackage ../development/python-modules/sympy { };
+
+  syncer = callPackage ../development/python-modules/syncer { };
 
   systembridge = callPackage ../development/python-modules/systembridge { };
 
