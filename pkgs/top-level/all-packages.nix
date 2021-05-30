@@ -4326,6 +4326,8 @@ in
 
   xkcdpass = with python3Packages; toPythonApplication xkcdpass;
 
+  xjobs = callPackage ../tools/misc/xjobs { };
+
   xob = callPackage ../tools/X11/xob { };
 
   z-lua = callPackage ../tools/misc/z-lua { };
@@ -8348,6 +8350,10 @@ in
   s3fs = callPackage ../tools/filesystems/s3fs { };
 
   s3cmd = python3Packages.callPackage ../tools/networking/s3cmd { };
+
+  s3rs = callPackage ../tools/networking/s3rs {
+    inherit (darwin.apple_sdk.frameworks) Security;
+  };
 
   s4cmd = callPackage ../tools/networking/s4cmd { };
 
