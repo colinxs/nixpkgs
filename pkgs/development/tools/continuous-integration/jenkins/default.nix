@@ -1,18 +1,28 @@
-{ lib, stdenv, fetchurl, common-updater-scripts, coreutils, git, gnused, nix
-, nixfmt, writeScript, nixosTests, jq, cacert, curl }:
+{ lib, stdenv, fetchurl, common-updater-scripts, coreutils, git, gnused, makeWrapper, nix
+, nixfmt, openjdk, writeScript, nixosTests, jq, cacert, curl }:
 
 stdenv.mkDerivation rec {
   pname = "jenkins";
-  version = "2.277.4";
+  version = "2.289.2";
 
   src = fetchurl {
     url = "http://mirrors.jenkins.io/war-stable/${version}/jenkins.war";
-    sha256 = "19z72d0rkxpvl03aqz102in9ln08r9831lj3ymsgmglk8c37ici6";
+    sha256 = "0413ymfrb00ifxl8ww8nn8y4k07jhgsaxaw2h0qnfh9s6yxifpbf";
   };
 
+  nativeBuildInputs = [ makeWrapper ];
+
   buildCommand = ''
-    mkdir -p "$out/webapps"
+    mkdir -p "$out/bin" "$out/share" "$out/webapps"
+
     cp "$src" "$out/webapps/jenkins.war"
+
+    # Create the `jenkins-cli` command.
+    ${openjdk}/bin/jar -xf "$src" WEB-INF/lib/cli-${version}.jar \
+      && mv WEB-INF/lib/cli-${version}.jar "$out/share/jenkins-cli.jar"
+
+    makeWrapper "${openjdk}/bin/java" "$out/bin/jenkins-cli" \
+      --add-flags "-jar $out/share/jenkins-cli.jar"
   '';
 
   passthru = {

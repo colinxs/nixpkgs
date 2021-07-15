@@ -107,6 +107,19 @@ let
       nativeBuildInputs = drv.nativeBuildInputs or [] ++ [ pkgs.psc-package self.pulp ];
     });
 
+    jsonplaceholder = super.jsonplaceholder.override (drv: {
+      buildInputs = [ nodejs ];
+      postInstall = ''
+        exe=$out/bin/jsonplaceholder
+        mkdir -p $out/bin
+        cat >$exe <<EOF
+        #!${pkgs.runtimeShell}
+        exec -a jsonplaceholder ${nodejs}/bin/node $out/lib/node_modules/jsonplaceholder/index.js
+        EOF
+        chmod a+x $exe
+      '';
+    });
+
     makam =  super.makam.override {
       buildInputs = [ pkgs.nodejs pkgs.makeWrapper ];
       postFixup = ''
@@ -202,6 +215,15 @@ let
       '';
     };
 
+    postcss-cli = super.postcss-cli.override {
+      nativeBuildInputs = [ pkgs.makeWrapper ];
+      postInstall = ''
+        wrapProgram "$out/bin/postcss" \
+          --prefix NODE_PATH : ${self.postcss}/lib/node_modules
+      '';
+      meta.mainProgram = "postcss";
+    };
+
     pulp = super.pulp.override {
       # tries to install purescript
       npmFlags = "--ignore-scripts";
@@ -217,13 +239,13 @@ let
     netlify-cli =
       let
         esbuild = pkgs.esbuild.overrideAttrs (old: rec {
-          version = "0.11.14";
+          version = "0.13.6";
 
           src = fetchFromGitHub {
-            owner = "evanw";
+            owner = "netlify";
             repo = "esbuild";
             rev = "v${version}";
-            sha256 = "sha256-N7WNam0zF1t++nLVhuxXSDGV/JaFtlFhufp+etinvmM=";
+            sha256 = "0asjmqfzdrpfx2hd5hkac1swp52qknyqavsm59j8xr4c1ixhc6n9";
           };
 
         });
@@ -330,6 +352,17 @@ let
         wrapProgram "$out/bin/yaml-language-server" \
         --prefix NODE_PATH : ${self.prettier}/lib/node_modules
       '';
+    };
+
+    wavedrom-cli = super.wavedrom-cli.override {
+      nativeBuildInputs = [ pkgs.pkg-config self.node-pre-gyp ];
+      # These dependencies are required by
+      # https://github.com/Automattic/node-canvas.
+      buildInputs = with pkgs; [
+        pixman
+        cairo
+        pango
+      ];
     };
   };
 in self

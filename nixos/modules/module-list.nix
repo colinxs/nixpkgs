@@ -9,6 +9,7 @@
   ./config/xdg/menus.nix
   ./config/xdg/mime.nix
   ./config/xdg/portal.nix
+  ./config/xdg/portals/wlr.nix
   ./config/appstream.nix
   ./config/console.nix
   ./config/xdg/sounds.nix
@@ -44,6 +45,7 @@
   ./hardware/ckb-next.nix
   ./hardware/cpu/amd-microcode.nix
   ./hardware/cpu/intel-microcode.nix
+  ./hardware/corectrl.nix
   ./hardware/digitalbitbox.nix
   ./hardware/device-tree.nix
   ./hardware/i2c.nix
@@ -136,9 +138,11 @@
   ./programs/file-roller.nix
   ./programs/firejail.nix
   ./programs/fish.nix
+  ./programs/flashrom.nix
   ./programs/flexoptix-app.nix
   ./programs/freetds.nix
   ./programs/fuse.nix
+  ./programs/gamemode.nix
   ./programs/geary.nix
   ./programs/gnome-disks.nix
   ./programs/gnome-documents.nix
@@ -150,6 +154,7 @@
   ./programs/iftop.nix
   ./programs/iotop.nix
   ./programs/java.nix
+  ./programs/kdeconnect.nix
   ./programs/kbdlight.nix
   ./programs/less.nix
   ./programs/liboping.nix
@@ -196,7 +201,6 @@
   ./programs/waybar.nix
   ./programs/wireshark.nix
   ./programs/wshowkeys.nix
-  ./programs/x2goserver.nix
   ./programs/xfs_quota.nix
   ./programs/xonsh.nix
   ./programs/xss-lock.nix
@@ -256,6 +260,7 @@
   ./services/backup/bacula.nix
   ./services/backup/borgbackup.nix
   ./services/backup/borgmatic.nix
+  ./services/backup/btrbk.nix
   ./services/backup/duplicati.nix
   ./services/backup/duplicity.nix
   ./services/backup/mysql-backup.nix
@@ -383,6 +388,7 @@
   ./services/hardware/bluetooth.nix
   ./services/hardware/bolt.nix
   ./services/hardware/brltty.nix
+  ./services/hardware/ddccontrol.nix
   ./services/hardware/fancontrol.nix
   ./services/hardware/freefall.nix
   ./services/hardware/fwupd.nix
@@ -492,7 +498,7 @@
   ./services/misc/freeswitch.nix
   ./services/misc/fstrim.nix
   ./services/misc/gammu-smsd.nix
-  ./services/misc/geoip-updater.nix
+  ./services/misc/geoipupdate.nix
   ./services/misc/gitea.nix
   #./services/misc/gitit.nix
   ./services/misc/gitlab.nix
@@ -553,6 +559,7 @@
   ./services/misc/siproxd.nix
   ./services/misc/snapper.nix
   ./services/misc/sonarr.nix
+  ./services/misc/sourcehut
   ./services/misc/spice-vdagentd.nix
   ./services/misc/ssm-agent.nix
   ./services/misc/sssd.nix
@@ -592,6 +599,7 @@
   ./services/monitoring/loki.nix
   ./services/monitoring/longview.nix
   ./services/monitoring/mackerel-agent.nix
+  ./services/monitoring/metricbeat.nix
   ./services/monitoring/monit.nix
   ./services/monitoring/munin.nix
   ./services/monitoring/nagios.nix
@@ -689,11 +697,11 @@
   ./services/networking/flannel.nix
   ./services/networking/freenet.nix
   ./services/networking/freeradius.nix
-  ./services/networking/gale.nix
   ./services/networking/gateone.nix
   ./services/networking/gdomap.nix
   ./services/networking/ghostunnel.nix
   ./services/networking/git-daemon.nix
+  ./services/networking/globalprotect-vpn.nix
   ./services/networking/gnunet.nix
   ./services/networking/go-neb.nix
   ./services/networking/go-shadowsocks2.nix
@@ -837,8 +845,10 @@
   ./services/networking/tox-node.nix
   ./services/networking/toxvpn.nix
   ./services/networking/tvheadend.nix
+  ./services/networking/ucarp.nix
   ./services/networking/unbound.nix
   ./services/networking/unifi.nix
+  ./services/video/unifi-video.nix
   ./services/networking/v2ray.nix
   ./services/networking/vsftpd.nix
   ./services/networking/wakeonlan.nix
@@ -851,6 +861,7 @@
   ./services/networking/xandikos.nix
   ./services/networking/xinetd.nix
   ./services/networking/xl2tpd.nix
+  ./services/networking/x2goserver.nix
   ./services/networking/xrdp.nix
   ./services/networking/yggdrasil.nix
   ./services/networking/zerobin.nix
@@ -866,7 +877,6 @@
   ./services/search/hound.nix
   ./services/search/kibana.nix
   ./services/search/solr.nix
-  ./services/security/bitwarden_rs/default.nix
   ./services/security/certmgr.nix
   ./services/security/cfssl.nix
   ./services/security/clamav.nix
@@ -892,6 +902,7 @@
   ./services/security/torsocks.nix
   ./services/security/usbguard.nix
   ./services/security/vault.nix
+  ./services/security/vaultwarden/default.nix
   ./services/security/yubikey-agent.nix
   ./services/system/cloud-init.nix
   ./services/system/dbus.nix
@@ -947,6 +958,7 @@
   ./services/web-apps/nextcloud.nix
   ./services/web-apps/nexus.nix
   ./services/web-apps/plantuml-server.nix
+  ./services/web-apps/plausible.nix
   ./services/web-apps/pgpkeyserver-lite.nix
   ./services/web-apps/matomo.nix
   ./services/web-apps/moinmoin.nix
@@ -958,6 +970,7 @@
   ./services/web-apps/trilium.nix
   ./services/web-apps/selfoss.nix
   ./services/web-apps/shiori.nix
+  ./services/web-apps/vikunja.nix
   ./services/web-apps/virtlyst.nix
   ./services/web-apps/wiki-js.nix
   ./services/web-apps/whitebophir.nix
@@ -1091,6 +1104,7 @@
   ./tasks/network-interfaces-systemd.nix
   ./tasks/network-interfaces-scripted.nix
   ./tasks/scsi-link-power-management.nix
+  ./tasks/snapraid.nix
   ./tasks/swraid.nix
   ./tasks/trackpoint.nix
   ./tasks/powertop.nix

@@ -126,7 +126,7 @@
 , "indium"
 , "insect"
 , "ionic"
-, {"iosevka": "https://github.com/be5invis/Iosevka/archive/v5.0.2.tar.gz"}
+, {"iosevka": "https://github.com/be5invis/Iosevka/archive/v7.2.4.tar.gz"}
 , "jake"
 , "javascript-typescript-langserver"
 , "joplin"
@@ -139,9 +139,11 @@
 , "json-refs"
 , "json-server"
 , "jsonlint"
+, "jsonplaceholder"
 , "kaput-cli"
 , "katex"
 , "karma"
+, "keyoxide"
 , "lcov-result-merger"
 , "leetcode-cli"
 , "vsc-leetcode-cli"
@@ -181,11 +183,14 @@
 , "patch-package"
 , "peerflix"
 , "peerflix-server"
+, "pkg"
 , "pm2"
 , "pnpm"
 , "poor-mans-t-sql-formatter-cli"
+, "postcss"
 , "postcss-cli"
 , "prettier"
+, "prettier-plugin-toml"
 , "pscid"
 , "pulp"
 , "purescript-language-server"
@@ -224,6 +229,7 @@
 , {"tedicross": "git+https://github.com/TediCross/TediCross.git#v0.8.7"}
 , "teck-programmer"
 , "tern"
+, "terser"
 , "textlint"
 , "textlint-plugin-latex"
 , "textlint-rule-abbr-within-parentheses"
@@ -261,6 +267,7 @@
 , { "vscode-lldb-build-deps": "../../misc/vscode-extensions/vscode-lldb/build-deps" }
 , "vue-cli"
 , "vue-language-server"
+, "wavedrom-cli"
 , "web-ext"
 , "webpack"
 , "webpack-cli"
@@ -272,4 +279,5 @@
 , "yaml-language-server"
 , "yarn"
 , "yo"
+, "zx"
 ]

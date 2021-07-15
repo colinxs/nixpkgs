@@ -21,6 +21,7 @@ import shutil
 import socket
 import subprocess
 import sys
+import telnetlib
 import tempfile
 import time
 import traceback
@@ -291,7 +292,12 @@ class Machine:
             net_frontend += "," + args["netFrontendArgs"]
 
         start_command = (
-            "qemu-kvm -m 384 " + net_backend + " " + net_frontend + " $QEMU_OPTS "
+            args.get("qemuBinary", "qemu-kvm")
+            + " -m 384 "
+            + net_backend
+            + " "
+            + net_frontend
+            + " $QEMU_OPTS "
         )
 
         if "hda" in args:
@@ -440,7 +446,7 @@ class Machine:
     def execute(self, command: str) -> Tuple[int, str]:
         self.connect()
 
-        out_command = "( {} ); echo '|!=EOF' $?\n".format(command)
+        out_command = "( set -euo pipefail; {} ); echo '|!=EOF' $?\n".format(command)
         self.shell.send(out_command.encode())
 
         output = ""
@@ -454,6 +460,17 @@ class Machine:
                 status_code = int(match[2])
                 return (status_code, output)
             output += chunk
+
+    def shell_interact(self) -> None:
+        """Allows you to interact with the guest shell
+
+        Should only be used during test development, not in the production test."""
+        self.connect()
+        self.log("Terminal is ready (there is no prompt):")
+        subprocess.run(
+            ["socat", "READLINE", f"FD:{self.shell.fileno()}"],
+            pass_fds=[self.shell.fileno()],
+        )
 
     def succeed(self, *commands: str) -> str:
         """Execute each command and check that it succeeds."""
@@ -896,7 +913,6 @@ class Machine:
 def create_machine(args: Dict[str, Any]) -> Machine:
     global log
     args["log"] = log
-    args["redirectSerial"] = os.environ.get("USE_SERIAL", "0") == "1"
     return Machine(args)
 
 
@@ -963,7 +979,7 @@ def subtest(name: str) -> Iterator[None]:
 
 
 if __name__ == "__main__":
-    arg_parser = argparse.ArgumentParser()
+    arg_parser = argparse.ArgumentParser(prog="nixos-test-driver")
     arg_parser.add_argument(
         "-K",
         "--keep-vm-state",

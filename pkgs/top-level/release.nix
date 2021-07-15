@@ -28,7 +28,7 @@ let
   supportDarwin = builtins.elem "x86_64-darwin" systemsWithAnySupport;
 
   jobs =
-    { tarball = import ./make-tarball.nix { inherit pkgs nixpkgs officialRelease; };
+    { tarball = import ./make-tarball.nix { inherit pkgs nixpkgs officialRelease supportedSystems; };
 
       metrics = import ./metrics.nix { inherit pkgs nixpkgs; };
 
@@ -174,7 +174,8 @@ let
               # Lightweight distribution and test
               inherit (bootstrap) dist test;
               # Test a full stdenv bootstrap from the bootstrap tools definition
-              inherit (bootstrap.test-pkgs) stdenv;
+              # TODO re-enable with https://github.com/NixOS/nixpkgs/pull/126411
+              # inherit (bootstrap.test-pkgs) stdenv;
             };
 
           # Cross compiled bootstrap tools

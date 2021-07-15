@@ -1,26 +1,34 @@
-{ lib, fetchFromGitHub, python3Packages }:
+{ lib
+, fetchFromGitHub
+, fetchpatch
+, python3Packages
+}:
 
 python3Packages.buildPythonApplication rec {
   pname = "chia";
-  version = "1.1.5";
+  version = "1.2.1";
 
   src = fetchFromGitHub {
     owner = "Chia-Network";
     repo = "chia-blockchain";
     rev = version;
-    sha256 = "ZUxWOlJGQpeQCtWt0PSdcbMackHdeuNFkxHvYDPcU8Y=";
+    sha256 = "sha256-ZNSNROWl6RR4GZnoRGAXrdw48wH9OOgrsoKz0RNIIcs=";
   };
 
   patches = [
-    # tweak version requirements to what's available in Nixpkgs
-    ./dependencies.patch
+    # Allow later websockets release, https://github.com/Chia-Network/chia-blockchain/pull/6304
+    (fetchpatch {
+      name = "later-websockets.patch";
+      url = "https://github.com/Chia-Network/chia-blockchain/commit/a188f161bf15a30e8e2efc5eec824e53e2a98a5b.patch";
+      sha256 = "1s5qjhd4kmi28z6ni7pc5n09czxvh8qnbwmnqsmms7cpw700g78s";
+    })
   ];
 
   nativeBuildInputs = [
     python3Packages.setuptools-scm
   ];
 
-  # give a hint to setuptools_scm on package version
+  # give a hint to setuptools-scm on package version
   SETUPTOOLS_SCM_PRETEND_VERSION = "v${version}";
 
   propagatedBuildInputs = with python3Packages; [
@@ -38,6 +46,7 @@ python3Packages.buildPythonApplication rec {
     colorlog
     concurrent-log-handler
     cryptography
+    dnspython
     keyrings-cryptfile
     pyyaml
     setproctitle
@@ -46,14 +55,24 @@ python3Packages.buildPythonApplication rec {
     websockets
   ];
 
-  checkInputs = [
-    python3Packages.pytestCheckHook
+  checkInputs = with python3Packages; [
+    pytestCheckHook
   ];
 
   disabledTests = [
     "test_spend_through_n"
     "test_spend_zero_coin"
   ];
+
+  postPatch = ''
+    # tweak version requirements to what's available in Nixpkgs
+    substituteInPlace setup.py \
+      --replace "aiohttp==3.7.4" "aiohttp>=3.7.4" \
+      --replace "sortedcontainers==2.3.0" "sortedcontainers>=2.3.0" \
+      --replace "click==7.1.2" "click>=7.1.2" \
+      --replace "clvm_rs==0.1.8" "clvm_rs>=0.1.8" \
+      --replace "clvm==0.9.7" "clvm>=0.9.7" \
+  '';
 
   preCheck = ''
     export HOME=`mktemp -d`

@@ -117,7 +117,8 @@ rec {
         --tmpdir=$TMPDIR \
         --override-os ${os} \
         --override-arch ${arch} \
-        copy "$sourceURL" "docker-archive://$out:$destNameTag"
+        copy "$sourceURL" "docker-archive://$out:$destNameTag" \
+        | cat  # pipe through cat to force-disable progress bar
     '';
 
   # We need to sum layer.tar, not a directory, hence tarsum instead of nix-hash.
@@ -131,6 +132,7 @@ rec {
     cp ${./tarsum.go} tarsum.go
     export GOPATH=$(pwd)
     export GOCACHE="$TMPDIR/go-cache"
+    export GO111MODULE=off
     mkdir -p src/github.com/docker/docker/pkg
     ln -sT ${docker.moby-src}/pkg/tarsum src/github.com/docker/docker/pkg/tarsum
     go build
@@ -544,7 +546,7 @@ rec {
         passthru.layer = layer;
         passthru.imageTag =
           if tag != null
-            then lib.toLower tag
+            then tag
             else
               lib.head (lib.strings.splitString "-" (baseNameOf result.outPath));
         # Docker can't be made to run darwin binaries

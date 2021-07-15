@@ -98,7 +98,10 @@ stdenv.mkDerivation rec {
     done
   '';
 
-  uuid = "gsconnect@andyholmes.github.io";
+  passthru = {
+    extensionUuid = "gsconnect@andyholmes.github.io";
+    extensionPortalSlug = "gsconnect";
+  };
 
   passthru = {
     tests = {
@@ -110,7 +113,7 @@ stdenv.mkDerivation rec {
     description = "KDE Connect implementation for Gnome Shell";
     homepage = "https://github.com/andyholmes/gnome-shell-extension-gsconnect/wiki";
     license = licenses.gpl2Plus;
-    maintainers = with maintainers; [ etu ];
+    maintainers = teams.gnome.members;
     platforms = platforms.linux;
   };
 }

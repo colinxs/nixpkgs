@@ -21,13 +21,13 @@ let
 
 in stdenv.mkDerivation rec {
   pname = "amdvlk";
-  version = "2021.Q2.2";
+  version = "2021.Q2.5";
 
   src = fetchRepoProject {
     name = "${pname}-src";
     manifest = "https://github.com/GPUOpen-Drivers/AMDVLK.git";
     rev = "refs/tags/v-${version}";
-    sha256 = "4k9ZkBxJGuNUO44F9D+u54eUREl5/8zxjxhaShhzGv0=";
+    sha256 = "0NJoGk++SHt4dtoUj3UQeW4zFtwa7osczUr+vxi8DG8=";
   };
 
   buildInputs = [
@@ -85,6 +85,6 @@ in stdenv.mkDerivation rec {
     changelog = "https://github.com/GPUOpen-Drivers/AMDVLK/releases/tag/v-${version}";
     license = licenses.mit;
     platforms = [ "x86_64-linux" "i686-linux" ];
-    maintainers = with maintainers; [ danieldk Flakebi ];
+    maintainers = with maintainers; [ Flakebi ];
   };
 }

@@ -133,9 +133,9 @@ with lib.maintainers; {
 
   jitsi = {
     members = [
-      mmilata
       petabyteboy
       ryantm
+      yuka
     ];
     scope = "Maintain Jitsi.";
   };
@@ -155,12 +155,12 @@ with lib.maintainers; {
   matrix = {
     members = [
       ma27
-      pacien
       fadenb
       mguentner
       ekleog
       ralith
       mjlbach
+      dandellion
     ];
     scope = "Maintain the ecosystem around Matrix, a decentralized messenger.";
   };
@@ -203,5 +203,13 @@ with lib.maintainers; {
       mkaito
     ];
     scope = "Group registration for Serokell employees who collectively maintain packages.";
+  };
+
+  tts = {
+    members = [
+      hexa
+      mic92
+    ];
+    scope = "coqui-ai TTS (formerly Mozilla TTS) and leaf packages";
   };
 }

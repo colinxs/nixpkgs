@@ -8092,7 +8092,7 @@ let
       sha256 = "0wm87gpagb35d7c4nyaf9z3ry0jb3g5xpyjfzcxqcfxyj2zy9ip2";
     };
     doCheck = false; # Failed test 'desktop file is the right one'
-    buildInputs = [ FileBaseDir FileDesktopEntry ];
+    buildInputs = [ FileBaseDir FileDesktopEntry EncodeLocale ];
   };
 
   FileMMagic = buildPerlPackage {
@@ -8930,7 +8930,7 @@ let
       url = "mirror://cpan/authors/id/T/TS/TSCH/Gnome2-Wnck-0.16.tar.gz";
       sha256 = "604a8ece88ac29f132d59b0caac27657ec31371c1606a4698a2160e88ac586e5";
     };
-    buildInputs = [ pkgs.libwnck pkgs.glib pkgs.gtk2 ];
+    buildInputs = [ pkgs.libwnck2 pkgs.glib pkgs.gtk2 ];
     propagatedBuildInputs = [ Gtk2 ];
     meta = {
       description = "Perl interface to the Window Navigator Construction Kit";
@@ -10793,24 +10793,14 @@ let
     };
   };
 
-  ImageExifTool = buildPerlPackage {
+  ImageExifTool = buildPerlPackage rec {
     pname = "Image-ExifTool";
-    version = "12.16";
+    version = "12.29";
 
     src = fetchurl {
-      url = "mirror://cpan/authors/id/E/EX/EXIFTOOL/Image-ExifTool-12.16.tar.gz";
-      sha256 = "0skm22b3gg1bfk0amklrprpva41m6mkrhqp0gi7z1nmcf9ypjh61";
+      url = "https://exiftool.org/Image-ExifTool-${version}.tar.gz";
+      sha256 = "09yszwhirprqr94jwrsr9kyav5syv0mjmnjngqn20fn7m135wv95";
     };
-
-    patches = [
-      # Unfortunately, not every release is uploaded to CPAN so security fixes
-      # would need to be cherry-picked from releases
-      (fetchpatch {
-        name = "CVE-2021-22204.patch";
-        url = "https://salsa.debian.org/perl-team/modules/packages/libimage-exiftool-perl/-/raw/0347501fda93cb8366d6451aedcf258b34fb4a2b/debian/patches/CVE-2021-22204.patch";
-        sha256 = "1fxw32zcssillnv764wsd05lyswn8bbrc90q5cy9aknx0ncgsrxj";
-      })
-    ];
 
     nativeBuildInputs = lib.optional stdenv.isDarwin shortenPerlShebang;
     postInstall = lib.optionalString stdenv.isDarwin ''
@@ -11108,11 +11098,13 @@ let
       url = "mirror://cpan/authors/id/B/BR/BRMILLER/${pname}-${version}.tar.gz";
       sha256 = "0dr69rgl4si9i9ww1r4dc7apgb7y6f7ih808w4g0924cvz823s0x";
     };
+    outputs = [ "out" "tex" ];
     propagatedBuildInputs = [ ArchiveZip DBFile FileWhich IOString ImageSize JSONXS LWP ParseRecDescent PerlMagick PodParser TextUnidecode XMLLibXSLT ];
     preCheck = ''
       rm t/931_epub.t # epub test fails
     '';
     nativeBuildInputs = [ pkgs.makeWrapper ] ++ lib.optional stdenv.isDarwin shortenPerlShebang;
+    makeMakerFlags = "TEXMF=\${tex} NOMKTEXLSR";
     # shebangs need to be patched before executables are copied to $out
     preBuild = ''
       patchShebangs bin/
@@ -11129,7 +11121,13 @@ let
     '';
     meta = {
       description = "Transforms TeX and LaTeX into XML/HTML/MathML";
-      license = lib.licenses.free;
+      homepage = "https://dlmf.nist.gov/LaTeXML/";
+      license = lib.licenses.publicDomain;
+      maintainers = with maintainers; [ xworld21 ];
+    };
+    passthru = {
+      tlType = "run";
+      pkgs = [ LaTeXML.tex ];
     };
   };
 
@@ -13677,10 +13675,10 @@ let
 
   Mojolicious = buildPerlPackage {
     pname = "Mojolicious";
-    version = "9.17";
+    version = "9.19";
     src = fetchurl {
-      url = "mirror://cpan/authors/id/S/SR/SRI/Mojolicious-9.17.tar.gz";
-      sha256 = "13dxjhr03dhh1f5bbxbb3jiwdv7jby96qqb97l3arf5x043yd9hd";
+      url = "mirror://cpan/authors/id/S/SR/SRI/Mojolicious-9.19.tar.gz";
+      sha256 = "15qs99sl3ckzqwpqk4kawhamdm6160bzxyikf3blym4fn1k6s1a5";
     };
     meta = {
       homepage = "https://mojolicious.org";
@@ -13803,12 +13801,12 @@ let
 
   MojoliciousPluginWebpack = buildPerlPackage {
     pname = "Mojolicious-Plugin-Webpack";
-    version = "0.14";
+    version = "1.01";
     src = fetchurl {
-      url = "mirror://cpan/authors/id/J/JH/JHTHORSEN/Mojolicious-Plugin-Webpack-0.14.tar.gz";
-      sha256 = "0b1a9rm5rlpqj6skgic4qzy4b1p35r2dhkh3rwaaypf9ha70i9gc";
+      url = "mirror://cpan/authors/id/J/JH/JHTHORSEN/Mojolicious-Plugin-Webpack-1.01.tar.gz";
+      sha256 = "1w6dr7yb8lvvx5z2xsmshp2cf4b7dynv05yhq0rk7zwif5v6gsvm";
     };
-    propagatedBuildInputs = [ Mojolicious ];
+    propagatedBuildInputs = [ Mojolicious Filechdir ];
     meta = {
       homepage = "https://github.com/jhthorsen/mojolicious-plugin-webpack";
       description = "Mojolicious <3 Webpack";
@@ -23936,6 +23934,21 @@ let
     meta = {
       description = "XS pointer backed objects using sv_magic";
       license = with lib.licenses; [ artistic1 gpl1Plus ];
+    };
+  };
+
+  XSParseKeyword = buildPerlModule {
+    pname = "XS-Parse-Keyword";
+    version = "0.06";
+    src = fetchurl {
+      url = "mirror://cpan/authors/id/P/PE/PEVANS/XS-Parse-Keyword-0.06.tar.gz";
+      sha256 = "0nnr8akkxb2h2y3d5r51pr84vvxkq89ynmi9azkbnn79jmbcbgvq";
+    };
+    perlPreHook = lib.optionalString stdenv.isDarwin "export LD=$CC";
+    meta = {
+      description = "XS functions to assist in parsing keyword syntax";
+      license = with lib.licenses; [ artistic1 gpl1Plus ];
+      maintainers = [ maintainers.zakame ];
     };
   };
 

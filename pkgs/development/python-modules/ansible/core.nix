@@ -1,8 +1,8 @@
 { lib
+, callPackage
 , buildPythonPackage
 , fetchPypi
 , installShellFiles
-, ansible-collections
 , cryptography
 , jinja2
 , junit-xml
@@ -21,13 +21,19 @@
 , xmltodict
 }:
 
+let
+  ansible-collections = callPackage ./collections.nix {
+    version = "4.1.0";
+    sha256 = "0rrivq1g0vizah8zmf012lzig2xxfk5x1371k16s3nn4zfkwqqgm";
+  };
+in
 buildPythonPackage rec {
   pname = "ansible-core";
-  version = "2.11.0";
+  version = "2.11.2";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "1if9cybdicjhrfzi6nndqakb4sh3mw1fijhvbzbsq7ki22vwww4l";
+    sha256 = "1syadgzn5ww5bhq9s2py4h1hkh11h7aac5b37zi8rw2xfvdc7r2s";
   };
 
   # ansible_connection is already wrapped, so don't pass it through
@@ -73,6 +79,10 @@ buildPythonPackage rec {
 
   # internal import errors, missing dependencies
   doCheck = false;
+
+  passthru = {
+    collections = ansible-collections;
+  };
 
   meta = with lib; {
     description = "Radically simple IT automation";

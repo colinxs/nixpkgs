@@ -1,5 +1,5 @@
 { lib, stdenv, fetchurl, config, wrapGAppsHook
-, alsaLib
+, alsa-lib
 , atk
 , cairo
 , curl
@@ -93,7 +93,7 @@ stdenv.mkDerivation {
 
   libPath = lib.makeLibraryPath
     [ stdenv.cc.cc
-      alsaLib
+      alsa-lib
       atk
       cairo
       curl
@@ -203,6 +203,7 @@ stdenv.mkDerivation {
       url = "http://www.mozilla.org/en-US/foundation/trademarks/policy/";
     };
     platforms = builtins.attrNames mozillaPlatforms;
+    timeout = 86400; # 24 hours (increased from the Hydra default of 10h, c.f. #129115)
     maintainers = with maintainers; [ taku0 lovesegfault ];
   };
 }

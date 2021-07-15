@@ -2,7 +2,7 @@
 , stdenv
 , fetchurl
 , makeWrapper
-, alsaLib
+, alsa-lib
 , at-spi2-atk
 , at-spi2-core
 , atk
@@ -47,7 +47,7 @@ stdenv.mkDerivation rec {
 
   installPhase =
     let rpath = lib.makeLibraryPath [
-      alsaLib
+      alsa-lib
       at-spi2-atk
       at-spi2-core
       atk
@@ -107,7 +107,7 @@ stdenv.mkDerivation rec {
     description = "Multi-platform password manager";
     homepage = "https://1password.com/";
     license = licenses.unfree;
-    maintainers = with maintainers; [ danieldk timstott savannidgerinel ];
+    maintainers = with maintainers; [ timstott savannidgerinel ];
     platforms = [ "x86_64-linux" ];
   };
 }

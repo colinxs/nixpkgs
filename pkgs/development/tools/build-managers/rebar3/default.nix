@@ -39,6 +39,20 @@ let
       HOME=. escript bootstrap
     '';
 
+
+    patches = []
+      # Skips test that can write outside the designated tmp directory, potentially resulting in build failures
+      # due to file ownership issues if ran without sandbox (eg. Mac M1 default). This patch can be Removed when
+      # rebar3 releases with the following commit:
+      # https://github.com/erlang/rebar3/commit/11055384dbd5bf7d181bca83a33b0e100275ff21
+      ++ lib.optionals (stdenv.isDarwin && stdenv.isAarch64) [ ./tmp-tests-skip.patch ];
+
+    checkPhase = ''
+      HOME=. escript ./rebar3 ct
+    '';
+
+    doCheck = true;
+
     installPhase = ''
       mkdir -p $out/bin
       cp rebar3 $out/bin/rebar3
@@ -101,6 +115,9 @@ let
         # instruct rebar3 to always load a certain plugin. It is necessary since
         # REBAR_GLOBAL_CONFIG_DIR doesn't seem to work for this.
         patches = [ ./skip-plugins.patch ./global-plugins.patch ];
+
+        # our patches cause the tests to fail
+        doCheck = false;
       }));
     in stdenv.mkDerivation {
       pname = "rebar3-with-plugins";
@@ -118,9 +135,11 @@ let
           {ok, _} = zip:extract(Archive, [{cwd, "'$out/lib'"}]),
           init:stop(0)
         '
+        cp ${./rebar_ignore_deps.erl} rebar_ignore_deps.erl
+        erlc -o $out/lib/rebar/ebin rebar_ignore_deps.erl
         mkdir -p $out/bin
         makeWrapper ${erlang}/bin/erl $out/bin/rebar3 \
-          --set REBAR_GLOBAL_PLUGINS "${toString globalPluginNames}" \
+          --set REBAR_GLOBAL_PLUGINS "${toString globalPluginNames} rebar_ignore_deps" \
           --suffix-each ERL_LIBS ":" "$out/lib ${toString pluginLibDirs}" \
           --add-flags "+sbtu +A1 -noshell -boot start_clean -s rebar3 main -extra"
       '';

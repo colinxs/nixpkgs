@@ -7,6 +7,7 @@
 , bash
 , installShellFiles
 , nftablesSupport ? false
+, nixosTests
 }:
 
 let
@@ -18,13 +19,13 @@ let
 in
 buildGoPackage rec {
   pname = "lxd";
-  version = "4.14";
+  version = "4.16";
 
   goPackagePath = "github.com/lxc/lxd";
 
   src = fetchurl {
     url = "https://linuxcontainers.org/downloads/lxd/lxd-${version}.tar.gz";
-    sha256 = "1x9gv70j333w254jgg1n0kvxpwv6vww0v0i862pglq48xhdaa7hy";
+    sha256 = "1da9avmxs8sy92d9nrdgry2x685ral58zgf89yr88qxc0llbzq7r";
   };
 
   postPatch = ''
@@ -38,6 +39,9 @@ buildGoPackage rec {
     rm _dist/src/github.com/lxc/lxd
     cp -r _dist/src/* ../../..
     popd
+
+    # required for go-dqlite. See: https://github.com/lxc/lxd/pull/8939
+    export CGO_LDFLAGS_ALLOW="(-Wl,-wrap,pthread_create)|(-Wl,-z,now)"
 
     makeFlagsArray+=("-tags libsqlite3")
   '';
@@ -57,6 +61,8 @@ buildGoPackage rec {
 
     installShellCompletion --bash --name lxd go/src/github.com/lxc/lxd/scripts/bash/lxd-client
   '';
+
+  passthru.tests.lxd = nixosTests.lxd;
 
   nativeBuildInputs = [ installShellFiles pkg-config makeWrapper ];
   buildInputs = [ lxc acl libcap dqlite.dev raft-canonical.dev

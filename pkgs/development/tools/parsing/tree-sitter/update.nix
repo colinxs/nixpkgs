@@ -74,8 +74,12 @@ let
       orga = "cstrahan";
       repo = "tree-sitter-nix";
     };
+    "tree-sitter-latex" = {
+      orga = "latex-lsp";
+      repo = "tree-sitter-latex";
+    };
     "tree-sitter-lua" = {
-      orga = "Azganoth";
+      orga = "nvim-treesitter";
       repo = "tree-sitter-lua";
     };
     "tree-sitter-fennel" = {
